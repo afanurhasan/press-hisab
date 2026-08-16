@@ -1,5 +1,6 @@
 "use client";
 
+
 import { useState } from "react";
 import Link from "next/link";
 
@@ -314,6 +315,16 @@ function getWeekProfit(week: Week) {
 export default function DashboardPage() {
   const [expandedWeek, setExpandedWeek] = useState<number | null>(null);
 
+
+  /* ================================================= */
+  /* LOGOUT */
+  /* ================================================= */
+
+  const handleLogout = () => {
+    localStorage.removeItem("isLoggedIn");
+    window.location.href = "/login";
+  };
+
   /* ================================================= */
   /* ALL ORDERS */
   /* ================================================= */
@@ -396,12 +407,24 @@ export default function DashboardPage() {
 
             {/* RIGHT */}
 
-            <Link
-              href="/"
-              className="ml-auto rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-2 text-[10px] font-semibold text-slate-700 transition hover:bg-slate-100 active:scale-95 sm:px-3.5 sm:text-xs"
-            >
-              Hisab
-            </Link>
+            <div className="ml-auto flex items-center gap-2">
+
+              <Link
+                href="/"
+                className="rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-2 text-[10px] font-semibold text-slate-700 transition hover:bg-slate-100 active:scale-95 sm:px-3.5 sm:text-xs"
+              >
+                Hisab
+              </Link>
+
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="ml-auto rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-2 text-[10px] font-semibold text-slate-700 transition hover:bg-slate-100 active:scale-95 sm:px-3.5 sm:text-xs"
+              >
+                Logout
+              </button>
+
+            </div>
 
           </div>
 

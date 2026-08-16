@@ -1,12 +1,16 @@
+
+
+
 "use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type Order = {
   id: number;
   partyName: string;
-  phoneNumber: string;
+  phone: string;
   district: string;
   orderAmount: number;
   paperCost: number;
@@ -23,6 +27,7 @@ type WeekData = {
 };
 
 const STORAGE_KEY = "press-hisab-data";
+const AUTH_KEY = "press-hisab-auth";
 
 /* ================================================= */
 /* WEEK FUNCTIONS */
@@ -48,7 +53,9 @@ function getWeekKey(date: Date) {
 
   return `${weekStart.getFullYear()}-${String(
     weekStart.getMonth() + 1
-  ).padStart(2, "0")}-${String(weekStart.getDate()).padStart(2, "0")}`;
+  ).padStart(2, "0")}-${String(
+    weekStart.getDate()
+  ).padStart(2, "0")}`;
 }
 
 function formatDate(date: Date) {
@@ -63,6 +70,8 @@ function formatDate(date: Date) {
 /* ================================================= */
 
 export default function Home() {
+  const router = useRouter();
+
   const [mounted, setMounted] = useState(false);
 
   const [weekKey, setWeekKey] = useState("");
@@ -80,7 +89,9 @@ export default function Home() {
 
   const [showOrderModal, setShowOrderModal] = useState(false);
 
-  const [editingOrderId, setEditingOrderId] = useState<number | null>(null);
+  const [editingOrderId, setEditingOrderId] = useState<number | null>(
+    null
+  );
 
   /* ================================================= */
   /* DELETE MODAL */
@@ -88,7 +99,9 @@ export default function Home() {
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const [deleteOrderId, setDeleteOrderId] = useState<number | null>(null);
+  const [deleteOrderId, setDeleteOrderId] = useState<number | null>(
+    null
+  );
 
   const [deleteOrderName, setDeleteOrderName] = useState("");
 
@@ -97,26 +110,26 @@ export default function Home() {
   /* ================================================= */
 
   const [partyName, setPartyName] = useState("");
-
-  const [phoneNumber, setPhoneNumber] = useState("");
-
+  const [phone, setPhone] = useState("");
   const [district, setDistrict] = useState("");
-
   const [orderAmount, setOrderAmount] = useState("");
-
   const [paperCost, setPaperCost] = useState("");
-
   const [plateCost, setPlateCost] = useState("");
-
   const [bindingCost, setBindingCost] = useState("");
-
   const [deliveryCost, setDeliveryCost] = useState("");
 
   /* ================================================= */
-  /* LOAD DATA */
+  /* AUTH CHECK + LOAD DATA */
   /* ================================================= */
 
   useEffect(() => {
+    const isLoggedIn = localStorage.getItem(AUTH_KEY);
+
+    if (isLoggedIn !== "true") {
+      router.replace("/login");
+      return;
+    }
+
     const today = new Date();
 
     const currentWeekKey = getWeekKey(today);
@@ -138,7 +151,7 @@ export default function Home() {
     }
 
     setMounted(true);
-  }, []);
+  }, [router]);
 
   /* ================================================= */
   /* SAVE DATA */
@@ -161,8 +174,21 @@ export default function Home() {
 
     allWeeks[weekKey] = weekData;
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(allWeeks));
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(allWeeks)
+    );
   }, [weekData, weekKey, mounted]);
+
+  /* ================================================= */
+  /* LOGOUT */
+  /* ================================================= */
+
+  const handleLogout = () => {
+    localStorage.removeItem(AUTH_KEY);
+
+    router.replace("/login");
+  };
 
   /* ================================================= */
   /* CURRENT WEEK */
@@ -188,24 +214,33 @@ export default function Home() {
   /* WEEKLY BUDGET */
   /* ================================================= */
 
-  const designerBudget = Number(weekData.designerBudget) || 0;
+  const designerBudget =
+    Number(weekData.designerBudget) || 0;
 
-  const marketingBudget = Number(weekData.marketingBudget) || 0;
+  const marketingBudget =
+    Number(weekData.marketingBudget) || 0;
 
-  const othersBudget = Number(weekData.othersBudget) || 0;
+  const othersBudget =
+    Number(weekData.othersBudget) || 0;
 
   /* ================================================= */
   /* PER ORDER AUTO COST */
   /* ================================================= */
 
   const designerCost =
-    totalOrders > 0 ? designerBudget / totalOrders : 0;
+    totalOrders > 0
+      ? designerBudget / totalOrders
+      : 0;
 
   const marketingCost =
-    totalOrders > 0 ? marketingBudget / totalOrders : 0;
+    totalOrders > 0
+      ? marketingBudget / totalOrders
+      : 0;
 
   const othersCost =
-    totalOrders > 0 ? othersBudget / totalOrders : 0;
+    totalOrders > 0
+      ? othersBudget / totalOrders
+      : 0;
 
   /* ================================================= */
   /* ADD ORDER */
@@ -215,7 +250,7 @@ export default function Home() {
     setEditingOrderId(null);
 
     setPartyName("");
-    setPhoneNumber("");
+    setPhone("");
     setDistrict("");
     setOrderAmount("");
     setPaperCost("");
@@ -234,19 +269,12 @@ export default function Home() {
     setEditingOrderId(order.id);
 
     setPartyName(order.partyName);
-
-    setPhoneNumber(order.phoneNumber || "");
-
+    setPhone(order.phone || "");
     setDistrict(order.district || "");
-
     setOrderAmount(String(order.orderAmount));
-
     setPaperCost(String(order.paperCost));
-
     setPlateCost(String(order.plateCost));
-
     setBindingCost(String(order.bindingCost));
-
     setDeliveryCost(String(order.deliveryCost));
 
     setShowOrderModal(true);
@@ -262,7 +290,7 @@ export default function Home() {
     setEditingOrderId(null);
 
     setPartyName("");
-    setPhoneNumber("");
+    setPhone("");
     setDistrict("");
     setOrderAmount("");
     setPaperCost("");
@@ -281,8 +309,8 @@ export default function Home() {
       return;
     }
 
-    if (!phoneNumber.trim()) {
-      alert("Phone number is required.");
+    if (!phone.trim()) {
+      alert("Mobile number is required.");
       return;
     }
 
@@ -304,7 +332,7 @@ export default function Home() {
 
       partyName: partyName.trim(),
 
-      phoneNumber: phoneNumber.trim(),
+      phone: phone.trim(),
 
       district: district.trim(),
 
@@ -389,11 +417,8 @@ export default function Home() {
     let totalOrderAmount = 0;
 
     let totalPaperCost = 0;
-
     let totalPlateCost = 0;
-
     let totalBindingCost = 0;
-
     let totalDeliveryCost = 0;
 
     orders.forEach((order) => {
@@ -466,6 +491,10 @@ export default function Home() {
 
       <div className="mx-auto min-h-screen w-full max-w-3xl bg-[#f4f7fb]">
 
+        {/* ================================================= */}
+        {/* HEADER */}
+        {/* ================================================= */}
+
         <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/95 px-3 py-3 backdrop-blur">
 
           <div className="relative mx-auto flex max-w-3xl items-center justify-between">
@@ -488,23 +517,34 @@ export default function Home() {
 
             </div>
 
-            {/* CENTER */}
+            {/* CENTER - ORDER */}
 
             <button
               onClick={openAddOrder}
               className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap rounded-xl bg-indigo-600 px-3 py-2 text-[10px] font-bold text-white shadow-md shadow-indigo-200 transition hover:bg-indigo-700 active:scale-95 sm:px-4 sm:text-xs"
             >
-              + Add Order
+              Add Order
             </button>
 
             {/* RIGHT */}
 
-            <Link
-              href="/dashboard"
-              className="ml-auto rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-2 text-[10px] font-semibold text-slate-700 transition hover:bg-slate-100 active:scale-95 sm:px-3.5 sm:text-xs"
-            >
-              Dashboard
-            </Link>
+            <div className="ml-auto flex items-center gap-1.5">
+
+              <Link
+                href="/dashboard"
+                className="rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-2 text-[10px] font-semibold text-slate-700 transition hover:bg-slate-100 active:scale-95 sm:px-3 sm:text-xs"
+              >
+                Dashboard
+              </Link>
+
+              <button
+                onClick={handleLogout}
+                className="rounded-xl border border-red-100 bg-red-50 px-2.5 py-2 text-[10px] font-semibold text-red-600 transition hover:bg-red-100 active:scale-95 sm:px-3 sm:text-xs"
+              >
+                Logout
+              </button>
+
+            </div>
 
           </div>
 
@@ -723,7 +763,7 @@ export default function Home() {
 
           </div>
 
-        
+         
 
           {/* EMPTY STATE */}
 
@@ -751,10 +791,6 @@ export default function Home() {
 
               {orders.map((order, index) => {
 
-                /* ================================= */
-                /* ORDER PROFIT */
-                /* ================================= */
-
                 const netProfit =
                   order.orderAmount -
                   order.paperCost -
@@ -778,13 +814,9 @@ export default function Home() {
 
                       <div className="flex min-w-0 items-center gap-3">
 
-                        {/* NUMBER */}
-
                         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-xs font-bold text-slate-500">
                           {index + 1}
                         </div>
-
-                        {/* PARTY */}
 
                         <div className="min-w-0">
 
@@ -804,11 +836,9 @@ export default function Home() {
 
                       </div>
 
-                      {/* ACTIONS + PROFIT */}
+                      {/* ACTIONS */}
 
                       <div className="flex shrink-0 items-center gap-1.5">
-
-                        {/* EDIT */}
 
                         <button
                           onClick={() =>
@@ -820,8 +850,6 @@ export default function Home() {
                           ✎
                         </button>
 
-                        {/* DELETE */}
-
                         <button
                           onClick={() =>
                             openDeleteConfirmation(order)
@@ -831,8 +859,6 @@ export default function Home() {
                         >
                           🗑
                         </button>
-
-                        {/* PROFIT */}
 
                         <div className="rounded-xl bg-emerald-50 px-3 py-2 text-right">
 
@@ -857,30 +883,30 @@ export default function Home() {
 
                     </div>
 
-                    {/* CUSTOMER INFO */}
+                    {/* CONTACT INFO */}
 
                     <div className="mt-3 grid grid-cols-2 gap-2">
 
                       <div className="rounded-lg bg-indigo-50 px-3 py-2">
 
-                        <p className="text-[9px] font-medium text-indigo-400">
-                          Phone
+                        <p className="text-[9px] text-slate-400">
+                          Mobile
                         </p>
 
-                        <p className="mt-0.5 text-[11px] font-semibold text-indigo-700">
-                          {order.phoneNumber}
+                        <p className="mt-0.5 text-[11px] font-semibold text-slate-700">
+                          {order.phone || "—"}
                         </p>
 
                       </div>
 
-                      <div className="rounded-lg bg-amber-50 px-3 py-2">
+                      <div className="rounded-lg bg-indigo-50 px-3 py-2">
 
-                        <p className="text-[9px] font-medium text-amber-500">
+                        <p className="text-[9px] text-slate-400">
                           District
                         </p>
 
-                        <p className="mt-0.5 text-[11px] font-semibold text-amber-700">
-                          {order.district}
+                        <p className="mt-0.5 text-[11px] font-semibold text-slate-700">
+                          {order.district || "—"}
                         </p>
 
                       </div>
@@ -889,7 +915,7 @@ export default function Home() {
 
                     {/* COST LIST */}
 
-                    <div className="mt-3 grid grid-cols-2 gap-2">
+                    <div className="mt-4 grid grid-cols-2 gap-2">
 
                       <CostItem
                         label="Paper"
@@ -929,7 +955,6 @@ export default function Home() {
                     </div>
 
                   </div>
-
                 );
               })}
 
@@ -950,13 +975,11 @@ export default function Home() {
         <div
           className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/50 p-0 backdrop-blur-[2px] sm:items-center sm:p-4"
           onMouseDown={(event) => {
-
             if (
               event.target === event.currentTarget
             ) {
               closeOrderModal();
             }
-
           }}
         >
 
@@ -968,7 +991,11 @@ export default function Home() {
 
               <div>
 
-
+                <p className="text-[10px] font-bold uppercase tracking-wider text-indigo-600">
+                  {editingOrderId !== null
+                    ? "Edit Order"
+                    : "New Order"}
+                </p>
 
                 <h3 className="mt-1 text-lg font-bold text-slate-900">
                   {editingOrderId !== null
@@ -991,8 +1018,6 @@ export default function Home() {
 
             <div className="space-y-3">
 
-              {/* PARTY NAME */}
-
               <FormInput
                 label="Party Name"
                 value={partyName}
@@ -1001,17 +1026,13 @@ export default function Home() {
                 type="text"
               />
 
-              {/* PHONE NUMBER */}
-
               <FormInput
-                label="Phone Number"
-                value={phoneNumber}
-                onChange={setPhoneNumber}
-                placeholder="e.g. 01712345678"
+                label="Mobile Number"
+                value={phone}
+                onChange={setPhone}
+                placeholder="e.g. 017XXXXXXXX"
                 type="tel"
               />
-
-              {/* DISTRICT */}
 
               <FormInput
                 label="District"
@@ -1021,8 +1042,6 @@ export default function Home() {
                 type="text"
               />
 
-              {/* ORDER AMOUNT */}
-
               <FormInput
                 label="Order Amount"
                 value={orderAmount}
@@ -1030,8 +1049,6 @@ export default function Home() {
                 placeholder="Enter order amount"
                 type="number"
               />
-
-              {/* DIRECT COSTS */}
 
               <div className="grid grid-cols-2 gap-3">
 
@@ -1162,13 +1179,9 @@ export default function Home() {
 
           <div className="w-full max-w-sm rounded-3xl bg-white p-5 shadow-2xl">
 
-            {/* ICON */}
-
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-xl">
               🗑
             </div>
-
-            {/* TEXT */}
 
             <h3 className="mt-4 text-base font-bold text-slate-900">
               Delete this order?
@@ -1185,8 +1198,6 @@ export default function Home() {
               ? This action cannot be undone.
 
             </p>
-
-            {/* BUTTONS */}
 
             <div className="mt-5 grid grid-cols-2 gap-3">
 
