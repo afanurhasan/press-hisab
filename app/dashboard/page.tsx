@@ -5,6 +5,8 @@ import Link from "next/link";
 
 type Order = {
   party: string;
+  mobile: string;
+  district: string;
   amount: number;
   paper: number;
   plate: number;
@@ -31,6 +33,8 @@ const weeks: Week[] = [
     orders: [
       {
         party: "ABC Publications",
+        mobile: "01711111111",
+        district: "Dhaka",
         amount: 12500,
         paper: 5200,
         plate: 600,
@@ -43,6 +47,8 @@ const weeks: Week[] = [
       },
       {
         party: "Rahman Traders",
+        mobile: "01822222222",
+        district: "Bogura",
         amount: 8200,
         paper: 3100,
         plate: 400,
@@ -55,6 +61,8 @@ const weeks: Week[] = [
       },
       {
         party: "City Books",
+        mobile: "01933333333",
+        district: "Rajshahi",
         amount: 15600,
         paper: 6800,
         plate: 700,
@@ -75,6 +83,8 @@ const weeks: Week[] = [
     orders: [
       {
         party: "Modern Press",
+        mobile: "01744444444",
+        district: "Dhaka",
         amount: 10500,
         paper: 4300,
         plate: 500,
@@ -87,6 +97,8 @@ const weeks: Week[] = [
       },
       {
         party: "Safa Enterprise",
+        mobile: "01855555555",
+        district: "Narayanganj",
         amount: 9200,
         paper: 3600,
         plate: 450,
@@ -99,6 +111,8 @@ const weeks: Week[] = [
       },
       {
         party: "Nahar Books",
+        mobile: "01966666666",
+        district: "Chattogram",
         amount: 13800,
         paper: 5900,
         plate: 650,
@@ -111,6 +125,8 @@ const weeks: Week[] = [
       },
       {
         party: "Alif Traders",
+        mobile: "01677777777",
+        district: "Rangpur",
         amount: 7600,
         paper: 2900,
         plate: 350,
@@ -131,6 +147,8 @@ const weeks: Week[] = [
     orders: [
       {
         party: "Star Publications",
+        mobile: "01788888888",
+        district: "Rajshahi",
         amount: 11800,
         paper: 4700,
         plate: 550,
@@ -143,6 +161,8 @@ const weeks: Week[] = [
       },
       {
         party: "Mitali Press",
+        mobile: "01899999999",
+        district: "Bogura",
         amount: 9800,
         paper: 3900,
         plate: 450,
@@ -155,6 +175,8 @@ const weeks: Week[] = [
       },
       {
         party: "Bismillah Enterprise",
+        mobile: "01910101010",
+        district: "Dhaka",
         amount: 14200,
         paper: 6100,
         plate: 650,
@@ -175,6 +197,8 @@ const weeks: Week[] = [
     orders: [
       {
         party: "New Vision",
+        mobile: "01612121212",
+        district: "Khulna",
         amount: 8900,
         paper: 3400,
         plate: 400,
@@ -187,6 +211,8 @@ const weeks: Week[] = [
       },
       {
         party: "S M Traders",
+        mobile: "01713131313",
+        district: "Sylhet",
         amount: 12100,
         paper: 5000,
         plate: 550,
@@ -345,25 +371,21 @@ export default function DashboardPage() {
 
       <div className="mx-auto min-h-screen w-full max-w-3xl bg-[#f4f7fb]">
 
-        {/* ================================================= */}
-        {/* HEADER */}
-        {/* ================================================= */}
+        <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/95 px-3 py-3 backdrop-blur">
 
-        <header className="border-b border-slate-200 bg-white px-3 py-3">
-
-          <div className="mx-auto flex w-full items-center justify-between">
+          <div className="relative mx-auto flex max-w-3xl items-center justify-between">
 
             {/* LEFT */}
 
-            <div className="flex items-center gap-2.5">
+            <div className="flex min-w-0 items-center gap-2.5">
 
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-sm font-bold text-white shadow-sm">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-xs font-bold text-white">
                 PH
               </div>
 
-              <div>
+              <div className="min-w-0">
 
-                <h1 className="text-base font-bold leading-tight text-slate-900">
+                <h1 className="truncate text-sm font-bold text-slate-900">
                   Press Hisab
                 </h1>
 
@@ -371,11 +393,12 @@ export default function DashboardPage() {
 
             </div>
 
+
             {/* RIGHT */}
 
             <Link
               href="/"
-              className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-xs font-semibold text-slate-700 transition-all hover:bg-slate-100 active:scale-95"
+              className="ml-auto rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-2 text-[10px] font-semibold text-slate-700 transition hover:bg-slate-100 active:scale-95 sm:px-3.5 sm:text-xs"
             >
               Hisab
             </Link>
@@ -383,6 +406,7 @@ export default function DashboardPage() {
           </div>
 
         </header>
+
 
         {/* ================================================= */}
         {/* CONTENT */}
@@ -405,6 +429,7 @@ export default function DashboardPage() {
             </p>
 
           </div>
+
 
           {/* ================================================= */}
           {/* SUMMARY CARDS */}
@@ -430,6 +455,7 @@ export default function DashboardPage() {
 
             </div>
 
+
             {/* TOTAL PROFIT */}
 
             <div className="rounded-2xl bg-emerald-500 p-4 text-white shadow-sm">
@@ -448,6 +474,7 @@ export default function DashboardPage() {
 
             </div>
 
+
             {/* TOTAL EXPENSE */}
 
             <div className="rounded-2xl bg-white p-4 shadow-sm">
@@ -461,6 +488,7 @@ export default function DashboardPage() {
               </h3>
 
             </div>
+
 
             {/* AVERAGE ORDER */}
 
@@ -477,6 +505,7 @@ export default function DashboardPage() {
             </div>
 
           </section>
+
 
           {/* ================================================= */}
           {/* OVERALL PERFORMANCE */}
@@ -496,6 +525,7 @@ export default function DashboardPage() {
 
             </div>
 
+
             <div className="space-y-3">
 
               {/* PROFIT */}
@@ -514,6 +544,7 @@ export default function DashboardPage() {
 
                 </div>
 
+
                 <div className="h-2 overflow-hidden rounded-full bg-slate-100">
 
                   <div
@@ -530,6 +561,7 @@ export default function DashboardPage() {
 
               </div>
 
+
               {/* EXPENSE */}
 
               <div>
@@ -545,6 +577,7 @@ export default function DashboardPage() {
                   </span>
 
                 </div>
+
 
                 <div className="h-2 overflow-hidden rounded-full bg-slate-100">
 
@@ -566,6 +599,7 @@ export default function DashboardPage() {
 
           </section>
 
+
           {/* ================================================= */}
           {/* PREVIOUS WEEKS */}
           {/* ================================================= */}
@@ -583,6 +617,7 @@ export default function DashboardPage() {
               </p>
 
             </div>
+
 
             {/* ================================================= */}
             {/* WEEK LIST */}
@@ -608,7 +643,7 @@ export default function DashboardPage() {
 
                 const color =
                   weekColors[
-                    index % weekColors.length
+                  index % weekColors.length
                   ];
 
                 return (
@@ -655,12 +690,13 @@ export default function DashboardPage() {
                               <span
                                 className={`rounded-full px-2 py-1 text-[10px] font-bold ${color.badge}`}
                               >
-                                RECENT
+                                Current
                               </span>
 
                             )}
 
                           </div>
+
 
                           <p
                             className={`mt-1 text-xs ${color.subText}`}
@@ -670,6 +706,7 @@ export default function DashboardPage() {
                           </p>
 
                         </div>
+
 
                         {/* RIGHT */}
 
@@ -691,14 +728,14 @@ export default function DashboardPage() {
 
                           </div>
 
+
                           {/* ARROW */}
 
                           <div
-                            className={`flex h-7 w-7 items-center justify-center rounded-full transition-transform duration-200 ${color.arrow} ${
-                              isExpanded
-                                ? "rotate-180"
-                                : ""
-                            }`}
+                            className={`flex h-7 w-7 items-center justify-center rounded-full transition-transform duration-200 ${color.arrow} ${isExpanded
+                              ? "rotate-180"
+                              : ""
+                              }`}
                           >
                             ↓
                           </div>
@@ -708,6 +745,7 @@ export default function DashboardPage() {
                       </div>
 
                     </button>
+
 
                     {/* ================================================= */}
                     {/* WEEK SUMMARY */}
@@ -729,6 +767,7 @@ export default function DashboardPage() {
 
                       </div>
 
+
                       {/* EXPENSE */}
 
                       <div className="border-x border-slate-100 px-3 py-3 text-center">
@@ -742,6 +781,7 @@ export default function DashboardPage() {
                         </p>
 
                       </div>
+
 
                       {/* ORDERS */}
 
@@ -759,6 +799,7 @@ export default function DashboardPage() {
 
                     </div>
 
+
                     {/* ================================================= */}
                     {/* ORDER DETAILS */}
                     {/* ================================================= */}
@@ -770,6 +811,7 @@ export default function DashboardPage() {
                         <p className="mb-2 px-1 text-xs font-bold text-slate-500">
                           ORDER DETAILS
                         </p>
+
 
                         <div className="space-y-2">
 
@@ -794,12 +836,28 @@ export default function DashboardPage() {
                                       {order.party}
                                     </p>
 
+
+                                    {/* MOBILE */}
+
+                                    <p className="mt-1 text-[11px] text-slate-500">
+                                      📱 {order.mobile}
+                                    </p>
+
+
+                                    {/* DISTRICT */}
+
+                                    <p className="mt-0.5 text-[11px] text-slate-500">
+                                      📍 {order.district}
+                                    </p>
+
+
                                     <p className="mt-1 text-[11px] text-slate-400">
                                       Order #
                                       {orderIndex + 1}
                                     </p>
 
                                   </div>
+
 
                                   <div className="shrink-0 text-right">
 
@@ -819,6 +877,7 @@ export default function DashboardPage() {
                                   </div>
 
                                 </div>
+
 
                                 {/* COST BREAKDOWN */}
 
@@ -873,6 +932,7 @@ export default function DashboardPage() {
                                     }
                                   />
 
+
                                   {/* NET PROFIT */}
 
                                   <div className="flex justify-between text-[11px] font-bold">
@@ -912,6 +972,7 @@ export default function DashboardPage() {
 
           </section>
 
+
           {/* ================================================= */}
           {/* FOOTER */}
           {/* ================================================= */}
@@ -931,6 +992,7 @@ export default function DashboardPage() {
     </main>
   );
 }
+
 
 /* ================================================= */
 /* COST ITEM */

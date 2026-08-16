@@ -6,6 +6,8 @@ import { useEffect, useMemo, useState } from "react";
 type Order = {
   id: number;
   partyName: string;
+  phoneNumber: string;
+  district: string;
   orderAmount: number;
   paperCost: number;
   plateCost: number;
@@ -46,9 +48,7 @@ function getWeekKey(date: Date) {
 
   return `${weekStart.getFullYear()}-${String(
     weekStart.getMonth() + 1
-  ).padStart(2, "0")}-${String(
-    weekStart.getDate()
-  ).padStart(2, "0")}`;
+  ).padStart(2, "0")}-${String(weekStart.getDate()).padStart(2, "0")}`;
 }
 
 function formatDate(date: Date) {
@@ -80,9 +80,7 @@ export default function Home() {
 
   const [showOrderModal, setShowOrderModal] = useState(false);
 
-  const [editingOrderId, setEditingOrderId] = useState<number | null>(
-    null
-  );
+  const [editingOrderId, setEditingOrderId] = useState<number | null>(null);
 
   /* ================================================= */
   /* DELETE MODAL */
@@ -90,9 +88,7 @@ export default function Home() {
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const [deleteOrderId, setDeleteOrderId] = useState<number | null>(
-    null
-  );
+  const [deleteOrderId, setDeleteOrderId] = useState<number | null>(null);
 
   const [deleteOrderName, setDeleteOrderName] = useState("");
 
@@ -101,10 +97,19 @@ export default function Home() {
   /* ================================================= */
 
   const [partyName, setPartyName] = useState("");
+
+  const [phoneNumber, setPhoneNumber] = useState("");
+
+  const [district, setDistrict] = useState("");
+
   const [orderAmount, setOrderAmount] = useState("");
+
   const [paperCost, setPaperCost] = useState("");
+
   const [plateCost, setPlateCost] = useState("");
+
   const [bindingCost, setBindingCost] = useState("");
+
   const [deliveryCost, setDeliveryCost] = useState("");
 
   /* ================================================= */
@@ -156,10 +161,7 @@ export default function Home() {
 
     allWeeks[weekKey] = weekData;
 
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(allWeeks)
-    );
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(allWeeks));
   }, [weekData, weekKey, mounted]);
 
   /* ================================================= */
@@ -186,33 +188,24 @@ export default function Home() {
   /* WEEKLY BUDGET */
   /* ================================================= */
 
-  const designerBudget =
-    Number(weekData.designerBudget) || 0;
+  const designerBudget = Number(weekData.designerBudget) || 0;
 
-  const marketingBudget =
-    Number(weekData.marketingBudget) || 0;
+  const marketingBudget = Number(weekData.marketingBudget) || 0;
 
-  const othersBudget =
-    Number(weekData.othersBudget) || 0;
+  const othersBudget = Number(weekData.othersBudget) || 0;
 
   /* ================================================= */
   /* PER ORDER AUTO COST */
   /* ================================================= */
 
   const designerCost =
-    totalOrders > 0
-      ? designerBudget / totalOrders
-      : 0;
+    totalOrders > 0 ? designerBudget / totalOrders : 0;
 
   const marketingCost =
-    totalOrders > 0
-      ? marketingBudget / totalOrders
-      : 0;
+    totalOrders > 0 ? marketingBudget / totalOrders : 0;
 
   const othersCost =
-    totalOrders > 0
-      ? othersBudget / totalOrders
-      : 0;
+    totalOrders > 0 ? othersBudget / totalOrders : 0;
 
   /* ================================================= */
   /* ADD ORDER */
@@ -222,6 +215,8 @@ export default function Home() {
     setEditingOrderId(null);
 
     setPartyName("");
+    setPhoneNumber("");
+    setDistrict("");
     setOrderAmount("");
     setPaperCost("");
     setPlateCost("");
@@ -239,10 +234,19 @@ export default function Home() {
     setEditingOrderId(order.id);
 
     setPartyName(order.partyName);
+
+    setPhoneNumber(order.phoneNumber || "");
+
+    setDistrict(order.district || "");
+
     setOrderAmount(String(order.orderAmount));
+
     setPaperCost(String(order.paperCost));
+
     setPlateCost(String(order.plateCost));
+
     setBindingCost(String(order.bindingCost));
+
     setDeliveryCost(String(order.deliveryCost));
 
     setShowOrderModal(true);
@@ -258,6 +262,8 @@ export default function Home() {
     setEditingOrderId(null);
 
     setPartyName("");
+    setPhoneNumber("");
+    setDistrict("");
     setOrderAmount("");
     setPaperCost("");
     setPlateCost("");
@@ -275,6 +281,16 @@ export default function Home() {
       return;
     }
 
+    if (!phoneNumber.trim()) {
+      alert("Phone number is required.");
+      return;
+    }
+
+    if (!district.trim()) {
+      alert("District is required.");
+      return;
+    }
+
     if (!orderAmount) {
       alert("Order amount is required.");
       return;
@@ -287,6 +303,10 @@ export default function Home() {
           : Date.now(),
 
       partyName: partyName.trim(),
+
+      phoneNumber: phoneNumber.trim(),
+
+      district: district.trim(),
 
       orderAmount: Number(orderAmount),
 
@@ -369,8 +389,11 @@ export default function Home() {
     let totalOrderAmount = 0;
 
     let totalPaperCost = 0;
+
     let totalPlateCost = 0;
+
     let totalBindingCost = 0;
+
     let totalDeliveryCost = 0;
 
     orders.forEach((order) => {
@@ -423,17 +446,13 @@ export default function Home() {
   if (!mounted) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#f4f7fb]">
-
         <div className="text-center">
-
           <div className="mx-auto mb-3 h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-indigo-600" />
 
           <p className="text-sm font-medium text-slate-500">
             Loading Press Hisab...
           </p>
-
         </div>
-
       </main>
     );
   }
@@ -445,18 +464,14 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#f4f7fb]">
 
-      {/* DASHBOARD SAME WIDTH */}
-
       <div className="mx-auto min-h-screen w-full max-w-3xl bg-[#f4f7fb]">
 
-        {/* ================================================= */}
-        {/* HEADER */}
-        {/* ================================================= */}
-
         <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/95 px-3 py-3 backdrop-blur">
+
           <div className="relative mx-auto flex max-w-3xl items-center justify-between">
 
-            {/* LEFT - LOGO */}
+            {/* LEFT */}
+
             <div className="flex min-w-0 items-center gap-2.5">
 
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-xs font-bold text-white">
@@ -464,17 +479,17 @@ export default function Home() {
               </div>
 
               <div className="min-w-0">
+
                 <h1 className="truncate text-sm font-bold text-slate-900">
                   Press Hisab
                 </h1>
 
-                
               </div>
 
             </div>
 
+            {/* CENTER */}
 
-            {/* CENTER - ADD ORDER */}
             <button
               onClick={openAddOrder}
               className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap rounded-xl bg-indigo-600 px-3 py-2 text-[10px] font-bold text-white shadow-md shadow-indigo-200 transition hover:bg-indigo-700 active:scale-95 sm:px-4 sm:text-xs"
@@ -482,8 +497,8 @@ export default function Home() {
               + Add Order
             </button>
 
+            {/* RIGHT */}
 
-            {/* RIGHT - DASHBOARD */}
             <Link
               href="/dashboard"
               className="ml-auto rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-2 text-[10px] font-semibold text-slate-700 transition hover:bg-slate-100 active:scale-95 sm:px-3.5 sm:text-xs"
@@ -492,6 +507,7 @@ export default function Home() {
             </Link>
 
           </div>
+
         </header>
 
         {/* ================================================= */}
@@ -520,8 +536,6 @@ export default function Home() {
                 </p>
 
               </div>
-
-            
 
             </div>
 
@@ -709,24 +723,9 @@ export default function Home() {
 
           </div>
 
-          {/* ================================================= */}
-          {/* CENTER ADD ORDER BUTTON */}
-          {/* ================================================= */}
+        
 
-          <div className="mb-4 flex justify-center">
-
-            <button
-              onClick={openAddOrder}
-              className="rounded-xl bg-indigo-600 px-7 py-2.5 text-xs font-bold text-white shadow-md shadow-indigo-200 transition hover:bg-indigo-700 active:scale-95"
-            >
-              + Add Order
-            </button>
-
-          </div>
-
-          {/* ================================================= */}
           {/* EMPTY STATE */}
-          {/* ================================================= */}
 
           {orders.length === 0 ? (
 
@@ -773,9 +772,7 @@ export default function Home() {
                     className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"
                   >
 
-                    {/* ================================= */}
                     {/* ORDER TOP */}
-                    {/* ================================= */}
 
                     <div className="flex items-start justify-between gap-3">
 
@@ -807,9 +804,7 @@ export default function Home() {
 
                       </div>
 
-                      {/* ================================= */}
                       {/* ACTIONS + PROFIT */}
-                      {/* ================================= */}
 
                       <div className="flex shrink-0 items-center gap-1.5">
 
@@ -862,11 +857,39 @@ export default function Home() {
 
                     </div>
 
-                    {/* ================================= */}
-                    {/* COST LIST */}
-                    {/* ================================= */}
+                    {/* CUSTOMER INFO */}
 
-                    <div className="mt-4 grid grid-cols-2 gap-2">
+                    <div className="mt-3 grid grid-cols-2 gap-2">
+
+                      <div className="rounded-lg bg-indigo-50 px-3 py-2">
+
+                        <p className="text-[9px] font-medium text-indigo-400">
+                          Phone
+                        </p>
+
+                        <p className="mt-0.5 text-[11px] font-semibold text-indigo-700">
+                          {order.phoneNumber}
+                        </p>
+
+                      </div>
+
+                      <div className="rounded-lg bg-amber-50 px-3 py-2">
+
+                        <p className="text-[9px] font-medium text-amber-500">
+                          District
+                        </p>
+
+                        <p className="mt-0.5 text-[11px] font-semibold text-amber-700">
+                          {order.district}
+                        </p>
+
+                      </div>
+
+                    </div>
+
+                    {/* COST LIST */}
+
+                    <div className="mt-3 grid grid-cols-2 gap-2">
 
                       <CostItem
                         label="Paper"
@@ -945,11 +968,7 @@ export default function Home() {
 
               <div>
 
-                <p className="text-[10px] font-bold uppercase tracking-wider text-indigo-600">
-                  {editingOrderId !== null
-                    ? "Edit Order"
-                    : "New Order"}
-                </p>
+
 
                 <h3 className="mt-1 text-lg font-bold text-slate-900">
                   {editingOrderId !== null
@@ -972,6 +991,8 @@ export default function Home() {
 
             <div className="space-y-3">
 
+              {/* PARTY NAME */}
+
               <FormInput
                 label="Party Name"
                 value={partyName}
@@ -980,6 +1001,28 @@ export default function Home() {
                 type="text"
               />
 
+              {/* PHONE NUMBER */}
+
+              <FormInput
+                label="Phone Number"
+                value={phoneNumber}
+                onChange={setPhoneNumber}
+                placeholder="e.g. 01712345678"
+                type="tel"
+              />
+
+              {/* DISTRICT */}
+
+              <FormInput
+                label="District"
+                value={district}
+                onChange={setDistrict}
+                placeholder="e.g. Bogura"
+                type="text"
+              />
+
+              {/* ORDER AMOUNT */}
+
               <FormInput
                 label="Order Amount"
                 value={orderAmount}
@@ -987,6 +1030,8 @@ export default function Home() {
                 placeholder="Enter order amount"
                 type="number"
               />
+
+              {/* DIRECT COSTS */}
 
               <div className="grid grid-cols-2 gap-3">
 
@@ -1265,7 +1310,7 @@ function FormInput({
       <input
         type={type}
         inputMode={
-          type === "number"
+          type === "number" || type === "tel"
             ? "numeric"
             : undefined
         }
