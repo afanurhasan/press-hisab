@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Press Hisab",
+  title: "Agrani Press",
   description: "Generated for Orders of Press Management",
   icons: {
     icon: "/logo.svg",

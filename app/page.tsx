@@ -514,7 +514,7 @@ export default function Home() {
               <div className="min-w-0">
 
                 <h1 className="truncate text-sm font-bold text-slate-900">
-                  Press Hisab
+                  Agrani Press
                 </h1>
 
               </div>

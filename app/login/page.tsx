@@ -114,7 +114,7 @@ export default function LoginPage() {
 </div>
 
             <h1 className="mt-4 text-xl font-bold text-slate-900">
-              Press Hisab
+              Agrani Press
             </h1>
 
             <p className="mt-1 text-sm text-slate-500">
