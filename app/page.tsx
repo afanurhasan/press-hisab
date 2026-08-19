@@ -503,9 +503,13 @@ export default function Home() {
 
             <div className="flex min-w-0 items-center gap-2.5">
 
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-xs font-bold text-white">
-                PH
-              </div>
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl overflow-hidden">
+  <img
+    src="/logo.png"
+    alt="Press Hisab"
+    className="h-full w-full object-contain"
+  />
+</div>
 
               <div className="min-w-0">
 
@@ -1231,6 +1235,10 @@ export default function Home() {
 /* BUDGET INPUT */
 /* ================================================= */
 
+/* ================================================= */
+/* BUDGET INPUT */
+/* ================================================= */
+
 function BudgetInput({
   label,
   value,
@@ -1242,6 +1250,23 @@ function BudgetInput({
   onChange: (value: string) => void;
   perOrder: number;
 }) {
+  const [draftValue, setDraftValue] = useState(value);
+  const [isEditing, setIsEditing] = useState(value === "");
+
+  useEffect(() => {
+    setDraftValue(value);
+    setIsEditing(value === "");
+  }, [value]);
+
+  const saveBudget = () => {
+    onChange(draftValue);
+    setIsEditing(false);
+  };
+
+  const editBudget = () => {
+    setIsEditing(true);
+  };
+
   return (
     <div className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 shadow-sm">
 
@@ -1266,12 +1291,15 @@ function BudgetInput({
         <input
           type="number"
           inputMode="numeric"
-          value={value}
-          onChange={(e) =>
-            onChange(e.target.value)
-          }
+          value={draftValue}
+          onChange={(e) => setDraftValue(e.target.value)}
+          disabled={!isEditing}
           placeholder="Enter amount"
-          className="h-10 w-full rounded-lg border border-slate-200 bg-slate-50 pl-8 pr-3 text-sm font-semibold text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/10"
+          className={`h-10 w-full rounded-lg border border-slate-200 pl-8 pr-3 text-sm font-semibold text-slate-900 outline-none transition placeholder:text-slate-400 ${
+            isEditing
+              ? "bg-slate-50 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/10"
+              : "bg-slate-100"
+          }`}
         />
 
       </div>
@@ -1282,11 +1310,31 @@ function BudgetInput({
           Per order
         </span>
 
-        <span className="text-[10px] font-bold text-indigo-600">
-          ৳{Math.round(
-            perOrder
-          ).toLocaleString()} / order
-        </span>
+        <div className="flex items-center gap-2">
+
+          <span className="text-[10px] font-bold text-indigo-600">
+            ৳{Math.round(
+              perOrder
+            ).toLocaleString()} / order
+          </span>
+
+          {isEditing ? (
+            <button
+              onClick={saveBudget}
+              className="rounded-lg bg-indigo-600 px-2.5 py-1 text-[9px] font-bold text-white transition hover:bg-indigo-700 active:scale-95"
+            >
+              Save
+            </button>
+          ) : (
+            <button
+              onClick={editBudget}
+              className="rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-[9px] font-semibold text-slate-600 transition hover:bg-slate-100 active:scale-95"
+            >
+              Edit
+            </button>
+          )}
+
+        </div>
 
       </div>
 

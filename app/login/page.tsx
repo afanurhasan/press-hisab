@@ -105,9 +105,13 @@ export default function LoginPage() {
 
           <div className="flex flex-col items-center text-center">
 
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-600 text-lg font-bold text-white shadow-md shadow-indigo-200">
-              PH
-            </div>
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl overflow-hidden">
+  <img
+    src="/logo.png"
+    alt="Press Hisab"
+    className="h-full w-full object-contain"
+  />
+</div>
 
             <h1 className="mt-4 text-xl font-bold text-slate-900">
               Press Hisab

@@ -390,9 +390,13 @@ export default function DashboardPage() {
 
             <div className="flex min-w-0 items-center gap-2.5">
 
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-xs font-bold text-white">
-                PH
-              </div>
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl overflow-hidden">
+  <img
+    src="/logo.png"
+    alt="Press Hisab"
+    className="h-full w-full object-contain"
+  />
+</div>
 
               <div className="min-w-0">
 
